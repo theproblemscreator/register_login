@@ -1,16 +1,47 @@
 const swaggerJsdoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
+// Swagger options
+
+/**
+ * @swagger
+ * components:
+ *   securitySchemes:
+ *     BearerAuth:
+ *       type: http
+ *       scheme: bearer
+ *       bearerFormat: JWT
+ */
+
+/**
+ * @swagger
+ * security:
+ *   - BearerAuth: []
+ */
 
 const swaggerOptions = {
-  definition: {
-    openapi: "3.0.0",
+  swaggerDefinition: {
+    openapi: '3.0.0',
     info: {
-      title: "API Documentation",
-      version: "1.0.0",
-      description: "API documentation for the application",
+      title: 'API Documentation',
+      version: '1.0.0',
+      description: 'API with Bearer Token Authentication',
     },
+    components: {
+      securitySchemes: {
+        BearerAuth: {
+          type: 'http',
+          scheme: 'bearer',
+          bearerFormat: 'JWT',
+        },
+      },
+    },
+    security: [
+      {
+        BearerAuth: [],
+      },
+    ],
   },
-  apis: ["./routes/*.js"],  // Adjust path to your route files
+  apis: ['./routes/*.js'], // Path to your route files
 };
 
 const swaggerSpec = swaggerJsdoc(swaggerOptions);

@@ -1,8 +1,23 @@
 const express = require('express');
 const { registerUser } = require('../controllers/userController');
-
+const {loginUser} = require('../controllers/authController')
 const router = express.Router();
+const authenticateToken = require('../middlewares/authMiddleware');
 
+
+/**
+ * @swagger
+ * /protected:
+ *   get:
+ *     summary: Access protected route
+ *     security:
+ *       - BearerAuth: []
+ *     responses:
+ *       200:
+ *         description: Successfully accessed protected route
+ *       401:
+ *         description: Token is missing or invalid
+ */
 
 /**
  * @swagger
@@ -50,7 +65,18 @@ const router = express.Router();
  *         description: Invalid input
  */
 
+
+router.get('/protected', authenticateToken, (req, res) => {
+  res.status(200).json({
+    message: 'Access granted',
+    user: req.user, // Token payload
+  });
+});
+  
+
 router.post('/register', registerUser);
+router.post('/login',loginUser);
+
 
 module.exports = router;
 
