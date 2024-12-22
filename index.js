@@ -3,8 +3,6 @@ const express = require('express');
 const sequelize = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 require('dotenv').config(); // Load environment variables
-const authRoutes = require('./routes/authRoutes'); 
-
 const { swaggerUi, swaggerSpec } = require('./config/swagger');
 
 const app = express();
@@ -14,7 +12,6 @@ app.use(bodyParser.json());
 
 // Routes
 app.use('/api/users', userRoutes);
-app.use('/api/users', authRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
