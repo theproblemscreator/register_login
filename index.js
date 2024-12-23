@@ -15,7 +15,7 @@ app.use('/api/users', userRoutes);
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-app.listen(8081, () => console.log('Server running on http://localhost:8081/api-docs'));
+// app.listen(8081, () => console.log('Server running on http://localhost:8081/api-docs'));
 
 // Start Server and Sync Database
 sequelize.sync({ alter: true }) // Automatically update tables

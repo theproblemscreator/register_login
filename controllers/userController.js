@@ -46,16 +46,16 @@ const registerUser = async (req, res) => {
             catch (error) {
                 return res.status(500).json({ message: 'Someting Went Wrong' })
             }
-      
-        }
-            else {
-                return res.status(400).json({ message: 'Password and confirm password not match' });
-    
-            }
-            return res.status(400).json({ message: 'All fields are required' });
-        }
 
+        }
+        else {
+            return res.status(400).json({ message: 'Password and confirm password not match' });
+
+        }
+        return res.status(400).json({ message: 'All fields are required' });
     }
+
+}
 
 const loginUser = async (req, res) => {
     const { email, password } = req.body;
@@ -69,7 +69,7 @@ const loginUser = async (req, res) => {
         const user = await User.findOne({ where: { email } });
 
         if (!user) {
-            return res.status(404).json({ message: 'Email not found in records.' })
+            return res.status(404).json({ message: 'Email  or password is not found in records.' })
         }
 
         //compare the password to db password
@@ -100,55 +100,30 @@ const loginUser = async (req, res) => {
 }
 
 const changePassword = async (req, res) => {
-    const { } = req.body;
+    const { password, confirm_password } = req.body;
 
-}
+    if (password && confirm_password) {
 
-const getUserById = async (req, res) => {
-    const { id } = req.params;
+        if (password === confirm_password) {
+            const hashedPassword = await bcrypt.hash(password, 10);
 
-    try {
-        const user = await User.findOne({ where: { id } });
-
-        if (!user) {
-            return res.status(404).json({ message: 'User is not found' });
+            try {
+                 // Update user password in the database
+                await User.update(
+                    { password: hashedPassword },
+                    { where: { id: req.user.id } }
+                );
+                res.status(200).json({ message: 'Password updated successfully.' });
+            } catch (error) {
+                res.status(500).json({ message: 'Failed to update password.', error: error.message });
+            }
+        } else {
+            res.status(400).json({ message: 'Password and confirm password do not match.' });
         }
-        res.status(200).json(user);
-
-    } catch (error) {
-        return res.status(500).json({ message: 'Internal Sever Error ' });
+    } else {
+        res.status(400).json({ message: 'Password and confirm password are required.' });
     }
-
-}
-
-const logoutUser = async (req, res) => {
-    const token = req.headers['authorization']?.split(' ')[1]; // Extract token
-
-    if (!token) {
-
-        res.status(400).json({ message: ' Token Not Provided ' });
-
-        try {
-            blacklist.add(token);
-            console.log('logout successful..')
-            return res.status(200).json({ message: ' Logout Successfully' });
-
-        } catch (error) {
-            return res.status(500).json({ message: 'Internal Server Error.' });
-        }
-    }
-
-}
-
-const isTokenBlacklisted = (req, res, next) => {
-    const token = req.headers['authorization']?.split(' ')[1];
-
-    if (blacklist.has(token)) {
-        return res.status(401).json({ message: 'Token is blacklisted' });
-    }
-
-    next();
 };
 
 
-module.exports = { registerUser, loginUser, getUserById, logoutUser, isTokenBlacklisted };
+module.exports = { registerUser, loginUser, changePassword, logoutUser, isTokenBlacklisted };
