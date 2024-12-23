@@ -127,5 +127,9 @@ const changePassword = async (req, res) => {
     }
 };
 
+const loggedInUSer = async(req,res)=>{
+    res.status(200).json({user : req.user})
+}
 
-module.exports = { registerUser, loginUser, changePassword };
+
+module.exports = { registerUser, loginUser, changePassword ,loggedInUSer};
