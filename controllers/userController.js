@@ -121,13 +121,11 @@ const changePassword = async (req, res) => {
         } else {
             res.status(400).json({ message: 'Password and confirm password do not match.' });
         }
-
-    } 
-    
-    else {
+        
+    } else {
         res.status(400).json({ message: 'Password and confirm password are required.' });
     }
 };
 
 
-module.exports = { registerUser, loginUser, changePassword, logoutUser, isTokenBlacklisted };
+module.exports = { registerUser, loginUser, changePassword };
