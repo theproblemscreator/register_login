@@ -109,18 +109,22 @@ const changePassword = async (req, res) => {
 
             try {
                  // Update user password in the database
-                await User.update(
-                    { password: hashedPassword },
-                    { where: { id: req.user.id } }
-                );
+                await User.update({ password: hashedPassword }, { where: { id: req.user.id } });
+
                 res.status(200).json({ message: 'Password updated successfully.' });
-            } catch (error) {
+            } 
+            catch (error) 
+            {
                 res.status(500).json({ message: 'Failed to update password.', error: error.message });
             }
+
         } else {
             res.status(400).json({ message: 'Password and confirm password do not match.' });
         }
-    } else {
+
+    } 
+    
+    else {
         res.status(400).json({ message: 'Password and confirm password are required.' });
     }
 };
