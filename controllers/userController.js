@@ -41,19 +41,23 @@ const registerUser = async (req, res) => {
 
                 res.status(201).json({ message: 'User is Registered Successfully.....', user: { id: newUser.id, name: newUser.email, mobile: newUser.mobile, token: token } });
 
-            }
+                 }
 
             catch (error) {
                 return res.status(500).json({ message: 'Someting Went Wrong' })
-            }
+             }
 
         }
         else {
             return res.status(400).json({ message: 'Password and confirm password not match' });
-
         }
+
         return res.status(400).json({ message: 'All fields are required' });
     }
+    else{
+        return res.status(404).json({message:'Fields are not empty'});
+    }
+    
 
 }
 
